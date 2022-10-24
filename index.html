@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas ASCII</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <form>
+        <div class="input-group">
+            <label for="link">Image Link</label>
+            <input type="text" name="link" id="link" />
+        </div>
+
+        <div class="input-group">
+            <label for="pixel">Pixel Size</label>
+            <input type="number" name="pixel" id="pixel" value="5" min="1"/>
+        </div>
+
+        <div class="input-group">
+            <label for="colorRange">Color Range</label>
+            <input type="number" name="colorRange" id="colorRange" value="4" min="1"/>
+        </div>
+
+        <div class="checkboxes">
+            <div class="input-group">
+                <label for="ascii">ASCII</label>
+                <input type="checkbox" name="ascii" id="ascii" checked>
+            </div>
+            <div class="input-group">
+                <label for="color">Color</label>
+                <input type="checkbox" name="color" id="color">
+            </div>
+        </div>
+
+        <button type="submit">Generate</button>
+    </form>
+    <canvas id="canvas"></canvas>
+
+    <script src="form.js" type="module"></script>
+    <script src="canvas.js" type="module"></script>
+</body>
+</html>
