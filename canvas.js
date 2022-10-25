@@ -69,7 +69,7 @@ function getRGBAValues(x,y,pixelSize,data){
     return [data[i], data[i+1], data[i+2], data[i+3]];
 }
 
-function reduceColorRange(value, range){
+function reduceColorDepth(value, range){
     const reducedValue = map(value, 0, 255, 0, range);
     const roundedValue = Math.round(reducedValue);
     
@@ -79,9 +79,9 @@ function reduceColorRange(value, range){
 function getPixelColor(x , y , pixelSize , colorRange , data){
     let [r,g,b,a] = getRGBAValues(x,y,pixelSize,data);
 
-    r = reduceColorRange(r, colorRange);
-    g = reduceColorRange(g, colorRange);
-    b = reduceColorRange(b, colorRange);
+    r = reduceColorDepth(r, colorRange);
+    g = reduceColorDepth(g, colorRange);
+    b = reduceColorDepth(b, colorRange);
 
     return `rgb(${r},${g},${b},${a})`;
 }
