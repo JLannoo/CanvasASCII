@@ -1,3 +1,5 @@
+import { displayError } from "./form.js";
+
 const downloadButton = document.querySelector("#downloadButton");
 const copyButton = document.querySelector("#copyButton");
 
@@ -25,6 +27,10 @@ export default function generateImage(data) {
     }
     if(file.size){
         img.src = URL.createObjectURL(file);
+    }
+
+    img.onerror = (e) => {
+        return displayError("Error loading image (probably blocked by CORS)");
     }
 
     img.onload = () => {

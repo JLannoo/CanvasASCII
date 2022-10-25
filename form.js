@@ -60,8 +60,12 @@ function sendGenerateSignal(){
 
     try {
         generateImage(data);
-        error.innerHTML = "";
+        displayError("");
     } catch (err) {
-        error.innerHTML = err.message;
+        displayError(err);
     }
+}
+
+export function displayError(message){
+    error.innerHTML = message;
 }
