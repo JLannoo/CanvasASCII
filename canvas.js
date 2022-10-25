@@ -1,5 +1,9 @@
 import { displayError } from "./form.js";
 
+import { getPixelBrightness , getPixelColor } from "./utilities/pixel.js";
+import { errorHandling } from "./utilities/error.js";
+import { getASCIIFromBrightness } from "./utilities/ascii.js";
+
 const downloadButton = document.querySelector("#downloadButton");
 const copyButton = document.querySelector("#copyButton");
 
@@ -12,8 +16,6 @@ downloadButton.addEventListener("click", async () => {
     link.href = canvas.toDataURL("image/png");
     link.click();
 });
-
-const ASCIIMap = [" ", ".", "/", "?", "=", "#", "@"];
 
 export default function generateImage(data) {
     const { link, file, pixelSize, colorDepth, ascii, color, keepTransparency , brightnessCompensation} = data;
@@ -100,61 +102,4 @@ export default function generateImage(data) {
 
         navigator.clipboard.writeText(str);
     });
-}
-
-function getRGBAValues(x,y,pixelSize,data){
-    const i = (y * pixelSize * canvas.width + x * pixelSize) * 4;
-    return [data[i], data[i+1], data[i+2], data[i+3]];
-}
-
-function reduceColorDepth(value, range){
-    const reducedValue = map(value, 0, 255, 0, range);
-    const roundedValue = Math.round(reducedValue);
-    
-    return roundedValue * (255/range);
-}
-
-function getPixelColor(x , y , pixelSize , colorRange , data , brightnessCompensation){
-    let [r,g,b,a] = getRGBAValues(x,y,pixelSize,data);
-
-    r = reduceColorDepth(clampHexValue(r + brightnessCompensation), colorRange);
-    g = reduceColorDepth(clampHexValue(g + brightnessCompensation), colorRange);
-    b = reduceColorDepth(clampHexValue(b + brightnessCompensation), colorRange);
-
-    return `rgb(${r},${g},${b},${a})`;
-}
-
-function getPixelBrightness(x , y , pixelSize , data , brightnessCompensation){
-    const [r,g,b] = getRGBAValues(x,y,pixelSize,data);
-    
-    // As per https://en.wikipedia.org/wiki/Relative_luminance
-    const brightness = ((r/255)*0.2126 + (g/255)*0.7152 + (b/255)*0.0722) * 255;
-    const compensatedBrightness = brightness + brightnessCompensation;
-
-    return clampHexValue(compensatedBrightness);
-}
-
-function getASCIIFromBrightness(value){
-    const reducedValue = value / 255 * (ASCIIMap.length - 1)
-    const index = Math.floor(reducedValue);
-
-    return ASCIIMap[index];
-}
-
-
-function map(n, start1, stop1, start2, stop2) {
-    return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
-}
-
-function errorHandling(data){
-    if(!data.link && !data.file.size) throw new Error("No link or file provided");
-
-    if(data.pixelSize <= 0) throw new Error("Pixel size must be greater than 0");
-
-    if(data.colorDepth <= 0) throw new Error("Color depth must be greater than 0");
-    if(data.colorDepth > 255) throw new Error("Color depth must be less than 256");
-}
-
-function clampHexValue(value){
-    return Math.min(Math.max(value, 0), 255);
 }
