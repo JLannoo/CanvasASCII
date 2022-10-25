@@ -11,8 +11,20 @@
 <body>
     <form>
         <div class="input-group">
+            <label for="select">Upload image from: </label>
+            <select name="select" id="select">
+                <option value="link">Link</option>
+                <option value="file">File</option>
+            </select>
+        </div>
+        
+        <div class="input-group" id="link-group">
             <label for="link">Image Link</label>
             <input type="text" name="link" id="link" />
+        </div>
+        <div class="input-group" id="file-group" hidden>
+            <label for="link">Image File</label>
+            <input type="file" name="file" id="file" />
         </div>
 
         <div class="input-group">
@@ -21,7 +33,7 @@
         </div>
 
         <div class="input-group">
-            <label for="colorRange">Color Range</label>
+            <label for="colorRange">Color Depth</label>
             <input type="number" name="colorRange" id="colorRange" value="4" min="1"/>
         </div>
 
@@ -38,6 +50,9 @@
 
         <button type="submit">Generate</button>
     </form>
+    <div class="error">
+        <p id="error"></p>
+    </div>
     <canvas id="canvas"></canvas>
 
     <script src="form.js" type="module"></script>

@@ -3,11 +3,17 @@ const ctx = canvas.getContext('2d');
 
 const ASCIIMap = [" ", ".", "/", "?", "=", "#", "@"];
 
-export default function generateImage(link , pixelSize, colorRange, ascii, color) {
-    // get pixel data from image link
+export default function generateImage(link , file , pixelSize, colorDepth, ascii, color) {
+    errorHandling(link , file , pixelSize, colorDepth, ascii, color);
+
     const img = new Image();
-    img.src = link;
-    img.crossOrigin = "Anonymous";
+    if(link){
+        img.src = link;
+        img.crossOrigin = "Anonymous";
+    }
+    if(file.size){
+        img.src = URL.createObjectURL(file);
+    }
 
     img.onload = () => {
         canvas.width = img.width;
@@ -30,10 +36,10 @@ export default function generateImage(link , pixelSize, colorRange, ascii, color
             const char = getASCIIFromBrightness(brightness);
 
             if(ascii){
-                ctx.fillStyle = color ? getPixelColor(x,y,pixelSize,colorRange,data) : "white";
+                ctx.fillStyle = color ? getPixelColor(x,y,pixelSize,colorDepth,data) : "white";
                 ctx.fillText(char, x*pixelSize, y*pixelSize);
             } else {
-                ctx.fillStyle = color ? getPixelColor(x,y,pixelSize,colorRange,data) : `rgb(${brightness},${brightness},${brightness})`;
+                ctx.fillStyle = color ? getPixelColor(x,y,pixelSize,colorDepth,data) : `rgb(${brightness},${brightness},${brightness})`;
                 ctx.fillRect(x*pixelSize, y*pixelSize, pixelSize, pixelSize);
             }
         }
@@ -66,7 +72,7 @@ function getPixelColor(x , y , pixelSize , colorRange , data){
 function getPixelBrightness(x,y,pixelSize,data){
     const [r,g,b] = getRGBValues(x,y,pixelSize,data);
     
-    // As per 
+    // As per https://en.wikipedia.org/wiki/Relative_luminance
     const brightness = ((r/255)*0.2126 + (g/255)*0.7152 + (b/255)*0.0722) * 255;
 
     return brightness;
@@ -82,4 +88,13 @@ function getASCIIFromBrightness(value){
 
 function map(n, start1, stop1, start2, stop2) {
     return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
+}
+
+function errorHandling(link , file , pixelSize, colorDepth, ascii, color){
+    if(!link && !file.size) throw new Error("No link or file provided");
+
+    if(pixelSize <= 0) throw new Error("Pixel size must be greater than 0");
+
+    if(colorDepth <= 0) throw new Error("Color depth must be greater than 0");
+    if(colorDepth > 255) throw new Error("Color depth must be less than 256");
 }
