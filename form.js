@@ -15,6 +15,9 @@ let generated = false;
 select.addEventListener("change", (e) => {
     const value = e.target.value;
 
+    document.querySelector("#link").value = "";
+    document.querySelector("#file").value = "";
+
     if(value === "file"){
         document.querySelector("#file-group").hidden = false;
         document.querySelector("#link-group").hidden = true;
