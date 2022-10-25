@@ -14,7 +14,7 @@ downloadButton.addEventListener("click", async () => {
 const ASCIIMap = [" ", ".", "/", "?", "=", "#", "@"];
 
 export default function generateImage(data) {
-    const { link, file, pixelSize, colorDepth, ascii, color, keepTransparency } = data;
+    const { link, file, pixelSize, colorDepth, ascii, color, keepTransparency , brightnessCompensation} = data;
 
     errorHandling(data);
 
@@ -47,14 +47,14 @@ export default function generateImage(data) {
         
         for(let y=0; y<canvas.height/pixelSize; y++) {
         for(let x=0; x<canvas.width/pixelSize; x++) {
-            const brightness = getPixelBrightness(x,y,pixelSize,data);
+            const brightness = getPixelBrightness(x,y,pixelSize,data,+brightnessCompensation);
             const char = getASCIIFromBrightness(brightness);
 
             if(ascii){
-                ctx.fillStyle = color ? getPixelColor(x,y,pixelSize,colorDepth,data) : "white";
+                ctx.fillStyle = color ? getPixelColor(x,y,pixelSize,colorDepth,data,+brightnessCompensation) : "white";
                 ctx.fillText(char, x*pixelSize, y*pixelSize);
             } else {
-                ctx.fillStyle = color ? getPixelColor(x,y,pixelSize,colorDepth,data) : `rgb(${brightness},${brightness},${brightness})`;
+                ctx.fillStyle = color ? getPixelColor(x,y,pixelSize,colorDepth,data,+brightnessCompensation) : `rgb(${brightness},${brightness},${brightness})`;
                 ctx.fillRect(x*pixelSize, y*pixelSize, pixelSize, pixelSize);
             }
         }
@@ -84,7 +84,7 @@ export default function generateImage(data) {
 
         for(let y=0; y<canvas.height/pixelSize; y++) {
         for(let x=0; x<canvas.width/pixelSize; x++) {
-            const brightness = getPixelBrightness(x,y,pixelSize,data);
+            const brightness = getPixelBrightness(x , y , pixelSize , data , brightnessCompensation);
             const char = getASCIIFromBrightness(brightness);
 
             str += char;
@@ -108,23 +108,24 @@ function reduceColorDepth(value, range){
     return roundedValue * (255/range);
 }
 
-function getPixelColor(x , y , pixelSize , colorRange , data){
+function getPixelColor(x , y , pixelSize , colorRange , data , brightnessCompensation){
     let [r,g,b,a] = getRGBAValues(x,y,pixelSize,data);
 
-    r = reduceColorDepth(r, colorRange);
-    g = reduceColorDepth(g, colorRange);
-    b = reduceColorDepth(b, colorRange);
+    r = Math.min(reduceColorDepth(r, colorRange) + brightnessCompensation, 255);
+    g = Math.min(reduceColorDepth(g, colorRange) + brightnessCompensation, 255);
+    b = Math.min(reduceColorDepth(b, colorRange) + brightnessCompensation, 255);
 
     return `rgb(${r},${g},${b},${a})`;
 }
 
-function getPixelBrightness(x,y,pixelSize,data){
+function getPixelBrightness(x , y , pixelSize , data , brightnessCompensation){
     const [r,g,b] = getRGBAValues(x,y,pixelSize,data);
     
     // As per https://en.wikipedia.org/wiki/Relative_luminance
     const brightness = ((r/255)*0.2126 + (g/255)*0.7152 + (b/255)*0.0722) * 255;
+    const compensatedBrightness = brightness + brightnessCompensation;
 
-    return brightness;
+    return Math.min(compensatedBrightness, 255);
 }
 
 function getASCIIFromBrightness(value){

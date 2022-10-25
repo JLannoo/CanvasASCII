@@ -7,6 +7,8 @@ const numberInput = document.querySelector("#pixelSize");
 const asciiCheckbox = document.querySelector("#ascii");
 const colorCheckbox = document.querySelector("#color");
 const transparencyCheckbox = document.querySelector("#keepTransparency");
+const brightnessCompensationRange = document.querySelector("#brightnessCompensation");
+const brightnessCompensationValue = document.querySelector("#brightnessCompensationValue");
 
 const error = document.querySelector("#error");
 
@@ -34,6 +36,13 @@ form.addEventListener("submit", async (e) => {
 
     generated = true;
 })
+
+brightnessCompensationRange.addEventListener("input", (e) => {
+    brightnessCompensationValue.textContent = e.target.value;
+    if(generated){
+        sendGenerateSignal();
+    }
+});
 
 function appendGenerateOnChange(element){
     element.addEventListener("change", (e) => {
