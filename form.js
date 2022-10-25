@@ -2,22 +2,15 @@ import generateImage from './canvas.js';
 
 const form = document.querySelector("form");
 const select = document.querySelector("#select");
-const colorRangeInput = document.querySelector("#colorRange");
-const numberInput = document.querySelector("#pixel");
+const colorRangeInput = document.querySelector("#colorDepth");
+const numberInput = document.querySelector("#pixelSize");
 const asciiCheckbox = document.querySelector("#ascii");
 const colorCheckbox = document.querySelector("#color");
+const transparencyCheckbox = document.querySelector("#keepTransparency");
 
 const error = document.querySelector("#error");
 
 let generated = false;
-
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    sendGenerateSignal();
-
-    generated = true;
-})
 
 select.addEventListener("change", (e) => {
     const value = e.target.value;
@@ -31,41 +24,30 @@ select.addEventListener("change", (e) => {
     }
 });
 
-numberInput.addEventListener("change", (e) => {
-    if(generated) {
-        sendGenerateSignal();
-    }
-});
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-colorRangeInput.addEventListener("change", (e) => {
-    if(generated) {
-        sendGenerateSignal();
-    }
-});
+    sendGenerateSignal();
 
-colorCheckbox.addEventListener("change", (e) => {
-    if(generated) {
-        sendGenerateSignal();
-    }
-});
+    generated = true;
+})
 
-asciiCheckbox.addEventListener("change", (e) => {
-    if(generated) {
-        sendGenerateSignal();
-    }
-});
+function appendGenerateOnChange(element){
+    element.addEventListener("change", (e) => {
+        if(generated) {
+            sendGenerateSignal();
+        }
+    });
+}
+const triggerRegenerateInputs = [colorRangeInput , numberInput, asciiCheckbox, colorCheckbox, transparencyCheckbox];
+triggerRegenerateInputs.forEach(appendGenerateOnChange);
 
 function sendGenerateSignal(){
     const formData = new FormData(form);
-    const link = formData.get("link");
-    const file = formData.get("file");
-    const pixelSize = formData.get("pixel");
-    const colorRange = formData.get("colorRange");
-    const ascii = formData.get("ascii");
-    const color = formData.get("color");
+    const data = Object.fromEntries(formData.entries());
 
     try {
-        generateImage(link, file, +pixelSize, +colorRange, ascii, color);
+        generateImage(data);
         error.innerHTML = "";
     } catch (err) {
         error.innerHTML = err.message;

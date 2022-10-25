@@ -1,7 +1,7 @@
 const downloadButton = document.querySelector("#downloadButton");
 
 const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d' , {willReadFrequently: true});
 
 downloadButton.addEventListener("click", async () => {
     const link = document.createElement("a");
@@ -12,8 +12,10 @@ downloadButton.addEventListener("click", async () => {
 
 const ASCIIMap = [" ", ".", "/", "?", "=", "#", "@"];
 
-export default function generateImage(link , file , pixelSize, colorDepth, ascii, color) {
-    errorHandling(link , file , pixelSize, colorDepth, ascii, color);
+export default function generateImage(data) {
+    const { link, file, pixelSize, colorDepth, ascii, color, keepTransparency } = data;
+
+    errorHandling(data);
 
     const img = new Image();
     if(link){
@@ -32,7 +34,12 @@ export default function generateImage(link , file , pixelSize, colorDepth, ascii
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if(keepTransparency){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        } else {
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
         ctx.textAlign = "center";
         ctx.font = `${pixelSize}px sans-serif`;
@@ -100,11 +107,11 @@ function map(n, start1, stop1, start2, stop2) {
     return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
 }
 
-function errorHandling(link , file , pixelSize, colorDepth, ascii, color){
-    if(!link && !file.size) throw new Error("No link or file provided");
+function errorHandling(data){
+    if(!data.link && !data.file.size) throw new Error("No link or file provided");
 
-    if(pixelSize <= 0) throw new Error("Pixel size must be greater than 0");
+    if(data.pixelSize <= 0) throw new Error("Pixel size must be greater than 0");
 
-    if(colorDepth <= 0) throw new Error("Color depth must be greater than 0");
-    if(colorDepth > 255) throw new Error("Color depth must be less than 256");
+    if(data.colorDepth <= 0) throw new Error("Color depth must be greater than 0");
+    if(data.colorDepth > 255) throw new Error("Color depth must be less than 256");
 }
