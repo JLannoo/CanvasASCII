@@ -44,7 +44,6 @@ export default function generateImage(data) {
         ctx.textAlign = "center";
         ctx.font = `${pixelSize}px sans-serif`;
         
-        // loop through each pixel and change the color
         for(let y=0; y<canvas.height/pixelSize; y++) {
         for(let x=0; x<canvas.width/pixelSize; x++) {
             const brightness = getPixelBrightness(x,y,pixelSize,data);
