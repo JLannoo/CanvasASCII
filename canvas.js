@@ -117,9 +117,9 @@ function reduceColorDepth(value, range){
 function getPixelColor(x , y , pixelSize , colorRange , data , brightnessCompensation){
     let [r,g,b,a] = getRGBAValues(x,y,pixelSize,data);
 
-    r = Math.min(reduceColorDepth(r, colorRange) + brightnessCompensation, 255);
-    g = Math.min(reduceColorDepth(g, colorRange) + brightnessCompensation, 255);
-    b = Math.min(reduceColorDepth(b, colorRange) + brightnessCompensation, 255);
+    r = reduceColorDepth(clampHexValue(r + brightnessCompensation), colorRange);
+    g = reduceColorDepth(clampHexValue(g + brightnessCompensation), colorRange);
+    b = reduceColorDepth(clampHexValue(b + brightnessCompensation), colorRange);
 
     return `rgb(${r},${g},${b},${a})`;
 }
@@ -131,7 +131,7 @@ function getPixelBrightness(x , y , pixelSize , data , brightnessCompensation){
     const brightness = ((r/255)*0.2126 + (g/255)*0.7152 + (b/255)*0.0722) * 255;
     const compensatedBrightness = brightness + brightnessCompensation;
 
-    return Math.min(compensatedBrightness, 255);
+    return clampHexValue(compensatedBrightness);
 }
 
 function getASCIIFromBrightness(value){
@@ -153,4 +153,8 @@ function errorHandling(data){
 
     if(data.colorDepth <= 0) throw new Error("Color depth must be greater than 0");
     if(data.colorDepth > 255) throw new Error("Color depth must be less than 256");
+}
+
+function clampHexValue(value){
+    return Math.min(Math.max(value, 0), 255);
 }
