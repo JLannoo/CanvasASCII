@@ -1,5 +1,14 @@
+const downloadButton = document.querySelector("#downloadButton");
+
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
+
+downloadButton.addEventListener("click", async () => {
+    const link = document.createElement("a");
+    link.download = "image.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+});
 
 const ASCIIMap = [" ", ".", "/", "?", "=", "#", "@"];
 
@@ -45,6 +54,8 @@ export default function generateImage(link , file , pixelSize, colorDepth, ascii
         }
         }
     }
+
+    downloadButton.hidden = false;
 }
 
 function getRGBValues(x,y,pixelSize,data){
