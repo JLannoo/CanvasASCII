@@ -1,22 +1,39 @@
+// @ts-check
+/**
+ * @typedef {Object} CanvasInputData
+ * @property {string} link
+ * @property {File} file
+ * @property {number} pixelSize
+ * @property {number} colorDepth
+ * @property {boolean} ascii
+ * @property {boolean} color
+ * @property {boolean} keepTransparency
+ * @property {number} brightnessCompensation
+ */
+
 import { displayError } from "./form.js";
 
 import { getPixelBrightness , getPixelColor } from "./utilities/pixel.js";
 import { errorHandling } from "./utilities/error.js";
 import { getASCIIFromBrightness } from "./utilities/ascii.js";
 
-const downloadButton = document.querySelector("#downloadButton");
-const copyButton = document.querySelector("#copyButton");
+const downloadButton = document.getElementById("#downloadButton");
+const copyButton = document.getElementById("#copyButton");
 
 const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d' , {willReadFrequently: true});
+const ctx = canvas?.getContext('2d' , {willReadFrequently: true});
 
-downloadButton.addEventListener("click", async () => {
+downloadButton?.addEventListener("click", async () => {
     const link = document.createElement("a");
     link.download = "image.png";
-    link.href = canvas.toDataURL("image/png");
+    link.href = canvas?.toDataURL("image/png") || "";
     link.click();
 });
 
+/**
+ * Generate the image with the solicited parameters.
+ * @param {CanvasInputData} data 
+ */
 export default function generateImage(data) {
     const { link, file, pixelSize, colorDepth, ascii, color, keepTransparency , brightnessCompensation} = data;
 
@@ -31,11 +48,13 @@ export default function generateImage(data) {
         img.src = URL.createObjectURL(file);
     }
 
-    img.onerror = (e) => {
+    img.onerror = () => {
         return displayError("Error loading image (probably blocked by CORS)");
     }
 
     img.onload = () => {
+        if(!canvas || !ctx) return displayError("Error loading canvas");
+
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
@@ -69,6 +88,8 @@ export default function generateImage(data) {
         }
     }
 
+    if(!downloadButton || !copyButton) return displayError("Error loading buttons");
+
     downloadButton.hidden = false;
     
     if(ascii && !color){
@@ -80,6 +101,8 @@ export default function generateImage(data) {
     copyButton.addEventListener("click", () => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
+
+        if(!canvas || !ctx) return displayError("An error occurred while copying the image");
 
         canvas.width = img.width;
         canvas.height = img.height;

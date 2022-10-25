@@ -44,6 +44,10 @@ brightnessCompensationRange.addEventListener("input", (e) => {
     }
 });
 
+/**
+ * Appends event listener to `element` that will trigger a `generateImage` call.
+ * @param {Element | HTMLElement} element 
+ */
 function appendGenerateOnChange(element){
     element.addEventListener("change", (e) => {
         if(generated) {
@@ -54,6 +58,9 @@ function appendGenerateOnChange(element){
 const triggerRegenerateInputs = [colorRangeInput , numberInput, asciiCheckbox, colorCheckbox, transparencyCheckbox];
 triggerRegenerateInputs.forEach(appendGenerateOnChange);
 
+/**
+ * Send a signal to the background script to generate the image.
+ */
 function sendGenerateSignal(){
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
@@ -66,6 +73,10 @@ function sendGenerateSignal(){
     }
 }
 
+/**
+ * Show an error message.
+ * @param {String} message 
+ */
 export function displayError(message){
     error.innerHTML = message;
 }

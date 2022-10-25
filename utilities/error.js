@@ -1,3 +1,13 @@
+// @ts-check
+
+/**
+ * @typedef {import("../canvas.js").CanvasInputData} CanvasInputData
+ */
+
+/**
+ * Throw error if the data passed is not valid.
+ * @param {CanvasInputData} data 
+ */
 export function errorHandling(data){
     if(!data.link && !data.file.size) throw new Error("No link or file provided");
 
