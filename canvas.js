@@ -1,4 +1,5 @@
 const downloadButton = document.querySelector("#downloadButton");
+const copyButton = document.querySelector("#copyButton");
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d' , {willReadFrequently: true});
@@ -61,6 +62,38 @@ export default function generateImage(data) {
     }
 
     downloadButton.hidden = false;
+    
+    if(ascii && !color){
+        copyButton.hidden = false;
+    } else {
+        copyButton.hidden = true;
+    }
+
+    copyButton.addEventListener("click", () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        let str = "";
+
+        for(let y=0; y<canvas.height/pixelSize; y++) {
+        for(let x=0; x<canvas.width/pixelSize; x++) {
+            const brightness = getPixelBrightness(x,y,pixelSize,data);
+            const char = getASCIIFromBrightness(brightness);
+
+            str += char;
+        }
+        str += "\r\n";
+        }
+
+        navigator.clipboard.writeText(str);
+    });
 }
 
 function getRGBAValues(x,y,pixelSize,data){
