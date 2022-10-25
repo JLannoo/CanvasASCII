@@ -32,8 +32,7 @@ export default function generateImage(link , file , pixelSize, colorDepth, ascii
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
-        ctx.fillStyle = "black";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         ctx.textAlign = "center";
         ctx.font = `${pixelSize}px sans-serif`;
@@ -58,9 +57,9 @@ export default function generateImage(link , file , pixelSize, colorDepth, ascii
     downloadButton.hidden = false;
 }
 
-function getRGBValues(x,y,pixelSize,data){
+function getRGBAValues(x,y,pixelSize,data){
     const i = (y * pixelSize * canvas.width + x * pixelSize) * 4;
-    return [data[i], data[i+1], data[i+2]];
+    return [data[i], data[i+1], data[i+2], data[i+3]];
 }
 
 function reduceColorRange(value, range){
@@ -71,17 +70,17 @@ function reduceColorRange(value, range){
 }
 
 function getPixelColor(x , y , pixelSize , colorRange , data){
-    let [r,g,b] = getRGBValues(x,y,pixelSize,data);
+    let [r,g,b,a] = getRGBAValues(x,y,pixelSize,data);
 
     r = reduceColorRange(r, colorRange);
     g = reduceColorRange(g, colorRange);
     b = reduceColorRange(b, colorRange);
 
-    return `rgb(${r},${g},${b})`;
+    return `rgb(${r},${g},${b},${a})`;
 }
 
 function getPixelBrightness(x,y,pixelSize,data){
-    const [r,g,b] = getRGBValues(x,y,pixelSize,data);
+    const [r,g,b] = getRGBAValues(x,y,pixelSize,data);
     
     // As per https://en.wikipedia.org/wiki/Relative_luminance
     const brightness = ((r/255)*0.2126 + (g/255)*0.7152 + (b/255)*0.0722) * 255;
