@@ -17,8 +17,8 @@ import { getPixelBrightness , getPixelColor } from "./utilities/pixel.js";
 import { errorHandling } from "./utilities/error.js";
 import { getASCIIFromBrightness } from "./utilities/ascii.js";
 
-const downloadButton = document.getElementById("#downloadButton");
-const copyButton = document.getElementById("#copyButton");
+const downloadButton = document.getElementById("downloadButton");
+const copyButton = document.getElementById("copyButton");
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas?.getContext('2d' , {willReadFrequently: true});
