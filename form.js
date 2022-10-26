@@ -66,8 +66,8 @@ function sendGenerateSignal(){
     const data = Object.fromEntries(formData.entries());
 
     try {
-        generateImage(data);
         displayError("");
+        generateImage(data);
     } catch (err) {
         displayError(err);
     }
