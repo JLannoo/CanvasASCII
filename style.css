@@ -123,6 +123,8 @@ canvas {
     color: white;
     font-size: 4rem;
     font-weight: bold;
+
+    z-index: 99;
 }
 .fileDropOverlay:not([open]){
     display: none;

@@ -23,9 +23,9 @@ export function errorHandling(data){
  */
 export function fileDropErrorHandling(e){
     if(e && e.dataTransfer && e.dataTransfer.items){
-        if(e.dataTransfer.items.length !== 1) throw new Error("Only one file can be dropped at a time");
-
         if(e.dataTransfer.items[0].kind !== "file") throw new Error("Only files can be dropped");
+        
+        if(e.dataTransfer.items.length !== 1) throw new Error("Only one file can be dropped at a time");
 
         if(!e.dataTransfer.items[0].type.startsWith("image/")) throw new Error("Only images can be dropped");    
     } else {
