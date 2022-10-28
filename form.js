@@ -20,6 +20,8 @@ const fileDropOverlay = document.querySelector("dialog");
 
 let generated = false;
 
+let errorTimeOut = null;
+
 select.addEventListener("change", (e) => {
     const value = e.target.value;
 
@@ -114,7 +116,7 @@ function sendGenerateSignal(){
         displayError("");
         generateImage(data);
     } catch (err) {
-        displayError(err);
+        displayError(err.message);
     }
 }
 
@@ -123,5 +125,30 @@ function sendGenerateSignal(){
  * @param {String} message 
  */
 export function displayError(message){
+    const errorContainer = error.parentElement;
     error.innerHTML = message;
+    
+    if(message === ""){
+        errorContainer.classList.remove("show");
+        return;    
+    };
+    
+    const errorWidth = errorContainer.offsetWidth;
+    const charWidth = parseFloat(getComputedStyle(errorContainer,':after').getPropertyValue("font-size"));
+    const charAmount = Math.round(errorWidth / charWidth)*1.8;
+
+    errorContainer.dataset.background = 
+        " " + "@".repeat(charAmount-2) + " \n" +
+              "@".repeat(charAmount)   +  "\n" +
+              "@".repeat(charAmount)   +  "\n" +
+        " " + "@".repeat(charAmount-2) + " ";
+
+    if(errorTimeOut){
+        clearTimeout(errorTimeOut);
+    }
+
+    errorContainer.classList.add("show");
+    errorTimeOut = setTimeout(() => {
+        errorContainer.classList.remove("show");
+    }, 5000);
 }

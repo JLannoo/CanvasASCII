@@ -36,6 +36,53 @@ canvas {
     max-height: 50%;
 }
 
+.error {
+    --error-position: -300%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    top: 0;
+
+    color: white;
+    font-weight: 900;
+    text-align: center;
+    font-size: 1.5rem;
+
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+    margin: 1rem;
+
+    transform: translate(0, var(--error-position));
+    transition: transform 0.5s ease-in-out;
+}
+.error::after{
+    content: attr(data-background);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: max-content;
+    height: 100%;
+    z-index: -1;
+    
+    color: #7b2b2b;
+    white-space: pre;
+    line-height: 0.9rem;
+    text-align: center;
+    font-size: 1rem;
+}
+.error p {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+}
+.error.show{
+    --error-position: 0;
+}
+
+
 .fileDropOverlay {
     display: flex;
     justify-content: center;
