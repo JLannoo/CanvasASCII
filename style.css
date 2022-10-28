@@ -15,6 +15,26 @@ body {
 
     color: white;
     font-family: monospace, sans-serif;
+    overflow: hidden;
+}
+
+pre {
+    position: absolute;
+    top: 0;
+    margin-top: 2rem;
+
+    font-size: clamp(0.1rem, 1.5vw, 1rem);
+    font-weight: 900;
+    max-width: 100%;
+
+    /* text gradient */
+    background: linear-gradient(to right,#ff46e6, #fed43b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+
+    text-shadow: 0 0 1rem rgba(255,255,255,0.2);
 }
 
 form {
@@ -29,6 +49,8 @@ form {
     margin: 1rem;
     border-radius: 1rem;    
     padding: 2rem;
+
+    z-index: 1;
 }
 
 canvas {
@@ -37,14 +59,14 @@ canvas {
 }
 
 .error {
-    --error-position: -300%;
+    --error-position: 300%;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
     position: absolute;
-    top: 0;
+    bottom: 0;
 
     color: white;
     font-weight: 900;
@@ -72,6 +94,8 @@ canvas {
     line-height: 0.9rem;
     text-align: center;
     font-size: 1rem;
+
+    text-shadow: 0 0 0.5rem rgba(255,0,0,0.5);
 }
 .error p {
     margin: 0;
