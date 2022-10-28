@@ -134,14 +134,16 @@ export function displayError(message){
     };
     
     const errorWidth = errorContainer.offsetWidth;
+    const errorHeight = errorContainer.offsetHeight;
     const charWidth = parseFloat(getComputedStyle(errorContainer,':after').getPropertyValue("font-size"));
-    const charAmount = Math.round(errorWidth / charWidth)*1.8;
+    const charHeight = parseFloat(getComputedStyle(errorContainer,':after').getPropertyValue("line-height"));
+    const charAmountW = Math.round(errorWidth / charWidth)*1.8;
+    const charAmountH = Math.round(errorHeight / charHeight);
 
     errorContainer.dataset.background = 
-        " " + "@".repeat(charAmount-2) + " \n" +
-              "@".repeat(charAmount)   +  "\n" +
-              "@".repeat(charAmount)   +  "\n" +
-        " " + "@".repeat(charAmount-2) + " ";
+        " " + "@".repeat(charAmountW-2) + " \n" +
+        ("@".repeat(charAmountW)   +  "\n").repeat(charAmountH-2) +
+        " " + "@".repeat(charAmountW-2) + " ";
 
     if(errorTimeOut){
         clearTimeout(errorTimeOut);
