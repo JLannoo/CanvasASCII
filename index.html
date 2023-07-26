@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canvas ASCII</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/form.css">
 </head>
 <body>
-    <pre aria-hidden="true" aria-label="Canvas ASCII">
+    <header class="dashed-border-horizontal">
+        <pre aria-hidden="true" aria-label="Canvas ASCII">
    @@@@@@                                                      @@      @@@@@@@@   @@@@@@  @@ @@
   @@////@@                                                    @@@@    @@//////   @@////@@/@@/@@
  @@    //   @@@@@@   @@@@@@@  @@    @@  @@@@@@    @@@@@@     @@//@@  /@@        @@    // /@@/@@
@@ -17,80 +19,85 @@
 /@@         @@@@@@@  /@@  /@@//@@ /@@   @@@@@@@ //@@@@@    @@@@@@@@@@////////@@/@@       /@@/@@
 //@@    @@ @@////@@  /@@  /@@ //@@@@   @@////@@  /////@@  /@@//////@@       /@@//@@    @@/@@/@@
  //@@@@@@ //@@@@@@@@ @@@  /@@  //@@   //@@@@@@@@ @@@@@@   /@@     /@@ @@@@@@@@  //@@@@@@ /@@/@@
-  //////   //////// ///   //    //     //////// //////    //      // ////////    //////  // // 
-    </pre>
-    <form>
-        <div class="input-group">
-            <label for="select">Upload image from: </label>
-            <select name="select" id="select">
-                <option value="link">Link</option>
-                <option value="file">File</option>
-            </select>
-        </div>
-        <small>You can also drag and drop files</small>
-        
-        <div class="input-group" id="link-group">
-            <label for="link">Image Link</label>
-            <input type="text" name="link" id="link" />
-        </div>
-        <div class="input-group" id="file-group" hidden>
-            <label for="link">Image File</label>
-            <input type="file" name="file" id="file" accept="image/*" />
-        </div>
+  //////   //////// ///   //    //     //////// //////    //      // ////////    //////  // //</pre>
+    </header>
+    <main>
+        <aside>
+            <form>
+                <div class="input-group">
+                    <label for="select">Upload image from: </label>
+                    <select name="select" id="select">
+                        <option value="link">Link</option>
+                        <option value="file">File</option>
+                    </select>
+                </div>
+                <small>You can also drag and drop files</small>
+            
+                <div class="input-group" id="link-group">
+                    <label for="link">Image Link</label>
+                    <input type="text" name="link" id="link" />
+                </div>
+                <div class="input-group" id="file-group" hidden>
+                    <label for="link">Image File</label>
+                    <input type="file" name="file" id="file" accept="image/*" />
+                </div>
+                <div class="input-group">
+                    <label for="pixel" title="The size of each pixel in the image">Pixel Size</label>
+                    <input type="number" name="pixelSize" id="pixelSize" value="5" min="1"/>
+                </div>
+                <div class="input-group">
+                    <label for="colorDepth" title="Color depth per color component (RGB)">Color Depth</label>
+                    <input type="number" name="colorDepth" id="colorDepth" value="4" min="1"/>
+                </div>
+                <div class="checkboxes">
+                    <div class="input-group">
+                        <label for="ascii" title="Use ASCII characters instead of blocks">ASCII</label>
+                        <input type="checkbox" name="ascii" id="ascii" checked>
+                    </div>
+                    <div class="input-group">
+                        <label for="color" title="Use color instead of grayscale">Color</label>
+                        <input type="checkbox" name="color" id="color">
+                    </div>
+                    <div class="input-group">
+                        <label for="keepTransparency" title="Keep alpha">Keep Transparency</label>
+                        <input type="checkbox" name="keepTransparency" id="keepTransparency">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="brightnessCompensation" title="Add brightness">Brightness Compensation</label>
+                    <input type="range" name="brightnessCompensation" id="brightnessCompensation" value="0" min="0" max="255" step="1"/>
+                    <span id="brightnessCompensationValue">000</span>
+                </div>
+                <button type="submit">Generate</button>
+            </form>
+        </aside>
 
-        <div class="input-group">
-            <label for="pixel">Pixel Size</label>
-            <input type="number" name="pixelSize" id="pixelSize" value="5" min="1"/>
-        </div>
-
-        <div class="input-group">
-            <label for="colorDepth">Color Depth</label>
-            <input type="number" name="colorDepth" id="colorDepth" value="4" min="1"/>
-        </div>
-
-        <div class="checkboxes">
-            <div class="input-group">
-                <label for="ascii">ASCII</label>
-                <input type="checkbox" name="ascii" id="ascii" checked>
+        <section>
+            <canvas id="canvas"></canvas>
+            
+            <div class="buttons">
+                <button id="downloadButton" hidden>Download</button>
+                <button id="copyButton" hidden>Copy ASCII</button>
             </div>
-            <div class="input-group">
-                <label for="color">Color</label>
-                <input type="checkbox" name="color" id="color">
-            </div>
-            <div class="input-group">
-                <label for="keepTransparency">Keep Transparency</label>
-                <input type="checkbox" name="keepTransparency" id="keepTransparency">
-            </div>
-        </div>
+        </section>
+    </main>
 
-        <div class="input-group">
-            <label for="brightnessCompensation">Brightness Compensation</label>
-            <input type="range" name="brightnessCompensation" id="brightnessCompensation" value="0" min="0" max="255" step="1"/>
-            <span id="brightnessCompensationValue">0</span>
+    <div class="error-container">
+        <div class="error">
+            <p id="error"></p>
         </div>
-
-        <button type="submit">Generate</button>
-    </form>
-    <div class="error">
-        <p id="error"></p>
-    </div>
-    <canvas id="canvas"></canvas>
-    
-    <div class="buttons">
-        <button id="downloadButton" hidden>Download</button>
-        <button id="copyButton" hidden>Copy ASCII</button>
     </div>
 
     <dialog class="fileDropOverlay" id="fileDropOverlay">
-        <p>Drop files here</p>
+        <pre>
+ _____  _____   ____  _____    ______ _____ _      ______  _____   _    _ ______ _____  ______ 
+|  __ \|  __ \ / __ \|  __ \  |  ____|_   _| |    |  ____|/ ____| | |  | |  ____|  __ \|  ____|
+| |  | | |__) | |  | | |__) | | |__    | | | |    | |__  | (___   | |__| | |__  | |__) | |__   
+| |  | |  _  /| |  | |  ___/  |  __|   | | | |    |  __|  \___ \  |  __  |  __| |  _  /|  __|  
+| |__| | | \ \| |__| | |      | |     _| |_| |____| |____ ____) | | |  | | |____| | \ \| |____ 
+|_____/|_|  \_\\____/|_|      |_|    |_____|______|______|_____/  |_|  |_|______|_|  \_|______|</pre>
     </dialog>
     
-    <script src="utilities/ascii.js" type="module"></script>
-    <script src="utilities/color.js" type="module"></script>
-    <script src="utilities/error.js" type="module"></script>
-    <script src="utilities/pixel.js" type="module"></script>
-    <script src="utilities/utils.js" type="module"></script>
     <script src="form.js" type="module"></script>
-    <script src="canvas.js" type="module"></script>
 </body>
 </html>

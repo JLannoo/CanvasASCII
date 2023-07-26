@@ -1,0 +1,146 @@
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    border-radius: 1rem;    
+    padding: 2rem;
+
+    z-index: 1;
+}
+
+.checkboxes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+
+    width: 100%;
+}
+.input-group[hidden] {
+    display: none;
+}
+
+label[title]::after {
+    content: "(?)";
+    font-size: 0.75rem;
+    color: #999;
+    cursor: help;
+    margin-left: 0.5rem;
+}
+
+input[type="text"],
+input[type="number"] {
+    background-color: transparent;
+    border: none;
+
+    padding: 0.25rem;
+
+    color: white;
+    font-weight: 600;
+
+    --dash-width: 10px;
+    background-image: linear-gradient(to right, white 50%, rgba(255, 255, 255, 0) 10%);
+    background-size: var(--dash-width) 1px;
+    background-repeat: repeat-x;
+    background-position: bottom;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    background-color: transparent;
+    border: 2px dashed white;
+
+    width: 1rem;
+    height: 1rem;
+
+    cursor: pointer;
+}
+input[type="checkbox"]:checked {
+    background-color: white;
+}
+
+input[type="range"] {
+    appearance: none;
+    background-color: transparent;
+    border: none;
+
+    --dash-width: 10px;
+    background: linear-gradient(to right, white 50%, rgba(255, 255, 255, 0) 10%);
+    background-size: var(--dash-width) 1px;
+    background-repeat: repeat-x;
+    background-position: center;
+
+    width: 100%;
+    height: 1rem;
+}
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    background-color: white;
+
+    width: 1rem;
+    height: 1rem;
+
+    cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+    appearance: none;
+    background-color: white;
+    border-radius: 0;
+
+    width: 1rem;
+    height: 1rem;
+
+    cursor: pointer;
+}
+
+select {
+    background-color: transparent;
+    border: none;
+
+    --dash-width: 10px;
+    background-image: linear-gradient(to right, white 50%, rgba(255, 255, 255, 0) 10%);
+    background-size: var(--dash-width) 1px;
+    background-repeat: repeat-x;
+    background-position: bottom;
+
+    padding: 0.5rem 1rem;
+
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    cursor: pointer;
+}
+option {
+    background-color: black;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    padding: 0.5rem;
+}
+
+button {
+    background-color: transparent;
+    border: 2px dashed white;
+
+    padding: 0.5rem 1rem;
+
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    cursor: pointer;
+}

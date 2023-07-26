@@ -1,8 +1,10 @@
 import generateImage from './canvas.js';
 import { fileDropErrorHandling } from './utilities/error.js';
+import { MobileMediaQuery } from './utilities/mediaQueries.js';
 
 const form = document.querySelector("form");
 
+const sideBar = document.querySelector("aside");
 const select = document.querySelector("#select");
 const linkInput = document.querySelector("#link");
 const fileInput = document.querySelector("#file");
@@ -45,6 +47,17 @@ form.addEventListener("submit", async (e) => {
     generated = true;
 });
 
+MobileMediaQuery.matches ? sideBar.classList.add("dashed-border-horizontal") : sideBar.classList.add("dashed-border-vertical");
+MobileMediaQuery.addEventListener("change", (e) => {
+    if(e.matches){
+        sideBar.classList.add("dashed-border-horizontal");
+        sideBar.classList.remove("dashed-border-vertical");
+    } else {
+        sideBar.classList.remove("dashed-border-horizontal");
+        sideBar.classList.add("dashed-border-vertical");
+    }
+});
+
 document.body.addEventListener("dragover", (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -85,7 +98,7 @@ fileDropOverlay.addEventListener("drop", (e) => {
 
 
 brightnessCompensationRange.addEventListener("input", (e) => {
-    brightnessCompensationValue.textContent = e.target.value;
+    brightnessCompensationValue.textContent = String(e.target.value).padStart(3, "0");
     if(generated){
         sendGenerateSignal();
     }
