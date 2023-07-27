@@ -145,12 +145,14 @@ export function displayError(message){
         errorContainer.classList.remove("show");
         return;    
     };
+
+    const horizontalScalingFactor = MobileMediaQuery.matches ? 1.65 : 1.8;
     
     const errorWidth = errorContainer.offsetWidth;
     const errorHeight = errorContainer.offsetHeight;
     const charWidth = parseFloat(getComputedStyle(errorContainer,':after').getPropertyValue("font-size"));
     const charHeight = parseFloat(getComputedStyle(errorContainer,':after').getPropertyValue("line-height"));
-    const charAmountW = Math.round(errorWidth / charWidth)*1.8;
+    const charAmountW = Math.round(errorWidth / charWidth) * horizontalScalingFactor;
     const charAmountH = Math.round(errorHeight / charHeight);
 
     errorContainer.dataset.background = 
