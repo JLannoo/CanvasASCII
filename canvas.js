@@ -1,8 +1,10 @@
 // @ts-check
 /**
  * @typedef {Object} CanvasInputData
+ * @property {"link" | "file" | "camera"} select
  * @property {string} link
  * @property {File} file
+ * @property {"user" | "environment"} cameraFacing
  * @property {number} pixelSize
  * @property {number} colorDepth
  * @property {boolean} ascii
@@ -16,6 +18,7 @@ import { displayError } from "./form.js";
 import { getPixelBrightness , getPixelColor } from "./utilities/pixel.js";
 import { errorHandling } from "./utilities/error.js";
 import { getASCIIFromBrightness } from "./utilities/ascii.js";
+import { getCameraData as getCameraSnapshot } from "./utilities/camera.js";
 
 const downloadButton = document.getElementById("downloadButton");
 const copyButton = document.getElementById("copyButton");
@@ -35,17 +38,22 @@ downloadButton?.addEventListener("click", async () => {
  * @param {CanvasInputData} data 
  */
 export default function generateImage(data) {
-    const { link, file, pixelSize, colorDepth, ascii, color, keepTransparency , brightnessCompensation} = data;
+    const { select, link, file, cameraFacing, pixelSize, colorDepth, ascii, color, keepTransparency , brightnessCompensation} = data;
 
     errorHandling(data);
 
     const img = new Image();
-    if(link){
+    if(select === "link" && link){
         img.src = link;
         img.crossOrigin = "Anonymous";
     }
-    if(file.size){
+    if(select === "file" && file.size){
         img.src = URL.createObjectURL(file);
+    }
+    if(select === "camera" && cameraFacing){
+        getCameraSnapshot(cameraFacing).then((data) => {
+            img.src = data;
+        });
     }
 
     img.onerror = () => {

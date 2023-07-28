@@ -8,6 +8,12 @@ const sideBar = document.querySelector("aside");
 const select = document.querySelector("#select");
 const linkInput = document.querySelector("#link");
 const fileInput = document.querySelector("#file");
+const cameraFacing = document.querySelector("#cameraFacing");
+
+const linkGroup = document.querySelector("#link-group");
+const fileGroup = document.querySelector("#file-group");
+const cameraGroup = document.querySelector("#camera-group");
+
 const colorRangeInput = document.querySelector("#colorDepth");
 const numberInput = document.querySelector("#pixelSize");
 const asciiCheckbox = document.querySelector("#ascii");
@@ -29,14 +35,15 @@ select.addEventListener("change", (e) => {
 
     document.querySelector("#link").value = "";
     document.querySelector("#file").value = "";
+    document.querySelector("#cameraFacing").value = "user";
 
-    if(value === "file"){
-        document.querySelector("#file-group").hidden = false;
-        document.querySelector("#link-group").hidden = true;
-    } else {
-        document.querySelector("#file-group").hidden = true;
-        document.querySelector("#link-group").hidden = false;
-    }
+    const showLinkInput = value === "link";
+    const showFileInput = value === "file";
+    const showCameraInput = value === "camera";
+
+    linkGroup.hidden = !showLinkInput;
+    fileGroup.hidden = !showFileInput;
+    cameraGroup.hidden = !showCameraInput;
 });
 
 form.addEventListener("submit", async (e) => {

@@ -49,6 +49,7 @@
                     <select name="select" id="select">
                         <option value="link">Link</option>
                         <option value="file">File</option>
+                        <option value="camera">Camera</option>
                     </select>
                 </div>
                 <small>You can also drag and drop files</small>
@@ -60,6 +61,13 @@
                 <div class="input-group" id="file-group" hidden>
                     <label for="link">Image File</label>
                     <input type="file" name="file" id="file" accept="image/*" />
+                </div>
+                <div class="input-group" id="camera-group" hidden>
+                    <label for="cameraFacing">Camera</label>
+                    <select name="cameraFacing" id="cameraFacing">
+                        <option value="user">Front</option>
+                        <option value="environment">Back</option>
+                    </select>
                 </div>
                 <div class="input-group">
                     <label for="pixel" title="The size of each pixel in the image">Pixel Size</label>
