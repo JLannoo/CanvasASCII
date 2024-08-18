@@ -141,6 +141,7 @@ button {
     color: white;
     font-weight: 600;
     text-transform: uppercase;
+    text-wrap: nowrap;
 
     cursor: pointer;
 }

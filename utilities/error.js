@@ -1,20 +1,22 @@
 // @ts-check
 
 /**
- * @typedef {import("../canvas.js").CanvasInputData} CanvasInputData
+ * @typedef {import ("../ImageProcessor").ImageProcessorInput} ImageProcessorInput
+ * @typedef {import ("../ImageProcessor").ImageProcessorConfig} ImageProcessorConfig
  */
 
 /**
  * Throw error if the data passed is not valid.
- * @param {CanvasInputData} data 
+ * @param {ImageProcessorInput} input
+ * @param {ImageProcessorConfig} config
  */
-export function errorHandling(data){
-    if(!data.link && !data.file.size && data.select !== "camera") throw new Error("No link or file provided");
+export function errorHandling(input, config) {
+    if(!input.link && !input.file.size && input.type !== "camera") throw new Error("No link or file provided");
 
-    if(data.pixelSize <= 0) throw new Error("Pixel size must be greater than 0");
+    if(config.pixelSize <= 0) throw new Error("Pixel size must be greater than 0");
 
-    if(data.colorDepth <= 0) throw new Error("Color depth must be greater than 0");
-    if(data.colorDepth > 255) throw new Error("Color depth must be less than 256");
+    if(config.colorDepth <= 0) throw new Error("Color depth must be greater than 0");
+    if(config.colorDepth > 255) throw new Error("Color depth must be less than 256");
 }
 
 /**

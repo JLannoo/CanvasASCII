@@ -1,21 +1,24 @@
-import generateImage from './canvas.js';
+import { ImageProcessor } from './ImageProcessor.js';
 import { fileDropErrorHandling } from './utilities/error.js';
 import { MobileMediaQuery } from './utilities/mediaQueries.js';
+
+const imageProcessor = new ImageProcessor();
 
 const form = document.querySelector("form");
 
 const sideBar = document.querySelector("aside");
-const select = document.querySelector("#select");
+const type = document.querySelector("#type");
 const linkInput = document.querySelector("#link");
 const fileInput = document.querySelector("#file");
 const cameraFacing = document.querySelector("#cameraFacing");
+const cameraButton = document.querySelector("#cameraButton");
 
 const linkGroup = document.querySelector("#link-group");
 const fileGroup = document.querySelector("#file-group");
 const cameraGroup = document.querySelector("#camera-group");
 
-const colorRangeInput = document.querySelector("#colorDepth");
-const numberInput = document.querySelector("#pixelSize");
+const pixelSizeInput = document.querySelector("#pixelSize");
+const colorDepthInput = document.querySelector("#colorDepth");
 const asciiCheckbox = document.querySelector("#ascii");
 const colorCheckbox = document.querySelector("#color");
 const transparencyCheckbox = document.querySelector("#keepTransparency");
@@ -30,12 +33,12 @@ let generated = false;
 
 let errorTimeOut = null;
 
-select.addEventListener("change", (e) => {
+type?.addEventListener("change", (e) => {
     const value = e.target.value;
 
-    document.querySelector("#link").value = "";
-    document.querySelector("#file").value = "";
-    document.querySelector("#cameraFacing").value = "user";
+    linkInput.value = "";
+    fileInput.value = "";
+    cameraFacing.value = "user";
 
     const showLinkInput = value === "link";
     const showFileInput = value === "file";
@@ -97,8 +100,8 @@ fileDropOverlay.addEventListener("drop", (e) => {
         return displayError(err.message);
     }
     
-    select.value = "file";
-    select.dispatchEvent(new Event("change"));
+    type.value = "file";
+    type.dispatchEvent(new Event("change"));
 
     fileInput.files = e.dataTransfer.files;
 });
@@ -122,22 +125,73 @@ function appendGenerateOnChange(element){
         }
     });
 }
-const triggerRegenerateInputs = [colorRangeInput , numberInput, asciiCheckbox, colorCheckbox, transparencyCheckbox];
+const triggerRegenerateInputs = [colorDepthInput , pixelSizeInput, asciiCheckbox, colorCheckbox, transparencyCheckbox, brightnessCompensationRange];
 triggerRegenerateInputs.forEach(appendGenerateOnChange);
+
+const configInputs = [pixelSizeInput, colorDepthInput, asciiCheckbox, colorCheckbox, transparencyCheckbox, brightnessCompensationRange];
+configInputs.forEach((input) => {
+    input.addEventListener("input", () => {
+        setProcessorConfig();
+    });
+});
+
+const inputInputs = [linkInput, fileInput, cameraFacing];
+inputInputs.forEach((input) => {
+    input.addEventListener("input", () => {
+        setProcessorInput();
+    });
+});
+cameraButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    setProcessorInput();
+});
 
 /**
  * Send a signal to the background script to generate the image.
  */
 function sendGenerateSignal(){
+    try {
+        displayError("");
+        imageProcessor.process();
+    } catch (err) {
+        displayError(err.message);
+        console.log(err);
+    }
+}
+
+/**
+ * 
+ */
+function setProcessorConfig(){
+    const form = document.querySelector("form");
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
-    try {
-        displayError("");
-        generateImage(data);
-    } catch (err) {
-        displayError(err.message);
-    }
+    const config = {
+        pixelSize: parseInt(data.pixelSize),
+        colorDepth: parseInt(data.colorDepth),
+        ascii: data.ascii === "on",
+        color: data.color === "on",
+        keepTransparency: data.keepTransparency === "on",
+        brightnessCompensation: parseInt(data.brightnessCompensation)
+    };
+
+    imageProcessor.config = config;
+}
+
+function setProcessorInput(){
+    const form = document.querySelector("form");
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    const input = {
+        type: data.type,
+        link: data.link,
+        file: data.file,
+        cameraFacing: data.cameraFacing,
+    };
+
+    imageProcessor.loadImageBuffer(input);
 }
 
 /**

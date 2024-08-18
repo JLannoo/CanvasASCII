@@ -45,8 +45,8 @@
         <aside>
             <form>
                 <div class="input-group">
-                    <label for="select">Upload image from: </label>
-                    <select name="select" id="select">
+                    <label for="type">Upload image from: </label>
+                    <select name="type" id="type">
                         <option value="link">Link</option>
                         <option value="file">File</option>
                         <option value="camera">Camera</option>
@@ -68,9 +68,10 @@
                         <option value="user">Front</option>
                         <option value="environment">Back</option>
                     </select>
+                    <button id="cameraButton">Take Picture</button>
                 </div>
                 <div class="input-group">
-                    <label for="pixel" title="The size of each pixel in the image">Pixel Size</label>
+                    <label for="pixelSize" title="The size of each pixel in the image">Pixel Size</label>
                     <input type="number" name="pixelSize" id="pixelSize" value="5" min="1"/>
                 </div>
                 <div class="input-group">
@@ -96,6 +97,7 @@
                     <input type="range" name="brightnessCompensation" id="brightnessCompensation" value="0" min="0" max="255" step="1"/>
                     <span id="brightnessCompensationValue">000</span>
                 </div>
+                
                 <button type="submit">Generate</button>
             </form>
         </aside>
